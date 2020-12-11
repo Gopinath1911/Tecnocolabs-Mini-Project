@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[18]:
+# In[1]:
 
 
 import pandas as pd 
@@ -35,6 +35,7 @@ import string
 import re    #for regex
 import nltk
 from nltk.corpus import stopwords
+nltk.download('stopwords')
 import spacy
 from nltk import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer 
@@ -54,11 +55,6 @@ from sklearn.metrics import log_loss
 from sklearn.model_selection import StratifiedKFold
 from sklearn.model_selection import train_test_split
 
-
-
-
-
-#settings
 start_time=time.time()
 color = sns.color_palette()
 sns.set_style("dark")
@@ -71,89 +67,84 @@ tokenizer=TweetTokenizer()
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[ ]:
+# In[21]:
 
 
-train.head(10)
+train.head()
 
 
-# In[ ]:
+# In[22]:
 
 
-nrows_train=train.shape[0]
-nrows_test=test.shape[0]
-sum=nrows_train+nrows_test
-
-print("     : train  : test")
-print("rows :", nrows_train, ":", nrows_test)
-print("perc :", round(nrows_train*100/sum), "    :", round(nrows_test*100/sum))
+test.head()
 
 
-# In[ ]:
+# In[24]:
+
+
+train.isnull().sum()
+
+
+# In[25]:
+
+
+test.isnull().sum()
+
+
+# In[35]:
+
+
+train.info()
+
+
+# In[37]:
+
+
+test.info()
+
+
+# In[55]:
+
+
+train['no_tag']=train.iloc[:,2:].sum(axis=1)
+train.no_tag.value_counts()
+
+
+# In[58]:
+
+
+train.no_tag.value(42)
+
+
+# In[42]:
+
+
+no_tag=train.iloc[:,2:].sum(axis=1)
+Train['clean']=1 
+if (no_tag==0): 
+else: 
+(0)
+
+
+# In[33]:
 
 
 x=train.iloc[:,2:].sum()
-rowsum=train.iloc[:,2:].sum(axis=1)
-train['clean']=(rowsum==0)
-train['clean'].sum()
-print('Total comments = ', len(train))
-print('Total clean comments =', train['clean'].sum())
-print('Total tags =', x.sum())
 
-
-# In[ ]:
-
-
-x=train.iloc[:,2:].sum()
-#plot
 plt.figure(figsize=(8,4))
-ax= sns.barplot(x.index, x.values, alpha=0.8)
-plt.title("# per class")
-plt.ylabel('# of Occurrences', fontsize=12)
-plt.xlabel('Type ', fontsize=12)
-#adding the text labels
+ax=sns.barplot(x.index, x.values, alpha=0.8)
+plt.title("Tag classification", fontsize=15)
+plt.xlabel("Divisons", fontsize=14)
+plt.ylabel("No._of_comments", fontsize=14)
+
 rects = ax.patches
 labels = x.values
+
 for rect, label in zip(rects, labels):
-    height = rect.get_height()
-    ax.text(rect.get_x() + rect.get_width()/2, height + 5, label, ha='center', va='bottom')
+    height=rect.get_height()
+    ax.text(rect.get_x() + rect.get_width()/2, height + 5, label, ha="center", va='bottom')
 
 plt.show()
-
-
-# In[ ]:
-
-
-
-#plot
-plt.figure(figsize=(8,4))
-ax = sns.barplot(x.index, x.values, alpha=0.8,color=color[2])
-plt.title("Multiple tags per comment")
-plt.ylabel('# of Occurrences', fontsize=12)
-plt.xlabel('# of tags ', fontsize=12)
-
-#adding the text labels
-rects = ax.patches
-labels = x.values
-for rect, label in zip(rects, labels):
-    height = rect.get_height()
-    ax.text(rect.get_x() + rect.get_width()/2, height + 5, label, ha='center', va='bottom')
-
-plt.show()
-
-
-# In[ ]:
-
-
-temp_df=train.iloc[:,2:-1]
-# filter temp by removing clean comments
-# temp_df=temp_df[~train.clean]
-
-corr=temp_df.corr()
-plt.figure(figsize=(10,8))
-sns.heatmap(corr,
-            xticklabels=corr.columns.values,
-            yticklabels=corr.columns.values, annot=True)
 
 
 # In[ ]:
