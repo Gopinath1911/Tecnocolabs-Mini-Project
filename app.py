@@ -17,7 +17,7 @@ def predict():
     int_features = request.form['comment']
     prediction = model.predict(int_features)
 
-    return render_template('index.html', prediction_text='percentage of toxic content in the comment {}': prediction)
+    return render_template('index.html', prediction_text='percentage of toxic content in the comment {}':, prediction)
 
 
 if __name__ == "__main__":
